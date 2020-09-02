@@ -1,0 +1,29 @@
+﻿@inherits DodajNovSektorDetailsBase
+
+    <ModalComponent ButtonStyle="btn-outline-dark" ButtonText="Dodaj Nov Sektor" ModalHeader="Dodaj Nov Sektor" OnPotrdi="NovSektorAdd" OnOdpriObrazec="OdpriObrazecNovSektor" @ref="ModalComponentChange">
+        <ModalBody>
+            <EditForm Model="NovSektor" OnValidSubmit="() => ConfirmationChange(true)">
+                <DataAnnotationsValidator />
+
+                <div class="form-group row">
+                    <label for="imeSektorja" class="col-sm-4 col-form-label">
+                        Ime Sektorja:
+                    </label>
+                    <div class="col-sm-8">
+                        <InputText id="imeSektorja" class="form-control" placeholder="Tukaj vpišite ime novega sektorja" @bind-Value="@NovSektor.ImeSektorja" />
+                        <ValidationMessage For="@(()=>NovSektor.ImeSektorja)" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => ConfirmationChange(false)">
+                        Prekliči
+                    </button>
+
+                    <button class="btn btn-primary" type="submit">
+                        Shrani
+                    </button>
+                </div>
+            </EditForm>
+        </ModalBody>
+    </ModalComponent>

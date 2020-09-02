@@ -1,0 +1,37 @@
+﻿@page "/plezalisca"
+@inherits PlezaliscaIndexBase
+
+    <div class="container">
+        <h2 class="font-weight-bold">Plezališča</h2>
+        <hr>
+        <Iskanje OnSearch_Klik="Search_Klik" LabelText="Poišči plezališče" />
+        <hr>
+        <h5>Filter po:</h5>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <button class="nav-item nav-link @PoImenu btn" @onclick="OnInitializedAsync">Imenu</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-item nav-link @PoStSmeri btn" @onclick="RazvrstiPoStSmeri">Številu smeri</button>
+            </li>
+            <li class="nav-pills">
+                <button class="nav-item nav-link @PoPopularnosti btn" @onclick="RazvrstiPoPopularnosti">Popularnosti</button>
+            </li>
+            <li class="nav-pills">
+                <button class="nav-item nav-link @PoCasuDostopa btn" @onclick="RazvrstiPoCasuDostopa">Čas dostopa</button>
+            </li>
+        </ul>
+        <hr>
+        @if (Plezalisca == null)
+        {
+            <img class="nalagam" src="images/Nalagam.gif" border="0" alt="animated-climbing-image-0012" /> }
+        else
+        {
+            <div>
+                <div class="card-deck text-center m-auto">
+                    @foreach (var plezalisce in Plezalisca)
+                    {
+                        <PlezalisceCard Plezalisce="plezalisce" OnIzbrisiPlezalisce_Klik="OnInitializedAsync" />}
+                </div>
+            </div>}
+    </div>

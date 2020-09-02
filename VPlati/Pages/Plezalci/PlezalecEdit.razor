@@ -1,0 +1,68 @@
+﻿@page "/editplezalec"
+@inherits PlezalecEditBase
+@attribute [Authorize]
+
+    <div class="container">
+        <EditForm Model="Plezalec" OnValidSubmit="UpdatePlezalec">
+            <DataAnnotationsValidator />
+            <h2 class="font-weight-bold">Uredi svoje podatke:</h2>
+            <hr />
+            <div class="form-group row">
+                <label for="imePlezalisca" class="col-sm-2 col-form-label">
+                    Ime:
+                </label>
+                <div class="col-sm-6">
+                    <InputText id="imePlezalec" class="form-control" placeholder="Ime"
+                               @bind-Value="@Plezalec.Ime"></InputText>
+                    <ValidationMessage For="@(() => Plezalec.Ime)" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="priimekPlezalec" class="col-sm-2 col-form-label">
+                    Priimek:
+                </label>
+                <div class="col-sm-6">
+                    <InputText id="priimekPlezalec" class="form-control" placeholder="Priimek"
+                               @bind-Value="@Plezalec.Priimek"></InputText>
+                    <ValidationMessage For="@(() => Plezalec.Priimek)" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="oMeni" class="col-sm-2 col-form-label">
+                    O meni:
+                </label>
+                <div class="col-sm-6">
+                    <InputTextArea id="oMeni" class="form-control" placeholder="Tukaj vpišite opis dostopa" @bind-Value="@Plezalec.PlezalecInfo" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="slikaPlezalca" class="col-sm-2 col-form-label">
+                    Slika plezalca:
+                </label>
+                <div class="col-sm-6 text-center">
+                    <input type="file" @ref="InputReference" @onchange="IzberiSliko">
+                    <div class="alert alert-danger @Notification" role="alert">
+                        Napačen format slike!
+                    </div>
+                    @if (NovaSlika)
+                    {
+                        <img class="img-thumbnail m-1" style="max-width:300px" src="@ImageContent" />
+                    }
+                    else
+                    {
+                        <img class="img-thumbnail m-1" style="max-width:300px" src=@Plezalec.SlikaPlezalca />
+                    }
+                </div>
+            </div>
+
+            <ValidationSummary />
+            <div class="col-sm-8 text-center">
+                <button class="btn btn-outline-primary" type="submit">
+                    Shrani
+                </button>
+                <a href=@($"plezalec/{Plezalec.Id}") class="btn btn-outline-secondary">Nazaj</a>
+            </div>
+        </EditForm>
+    </div>

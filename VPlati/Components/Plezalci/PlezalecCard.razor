@@ -1,0 +1,13 @@
+﻿@inherits PlezalecCardBase
+    <div class="m-3 text-center " style="width: 18rem;" @onmouseover="HoverEffect" @onmouseout="NormalEffect" @onclick="PojdiNaPlezalecDetails">
+        <div class="card @CSSShadow">
+            <img class="card-img-top img-thumbnail img-fluid" src="images/PlezalecCard.jpg" alt="Card ozadje">
+            <div class="card-body text-center">
+                <img class="avatar rounded-circle" src=@Plezalec.SlikaPlezalca alt="Slika profila">
+                <h5 class="card-title font-weight-bold">@($"{Plezalec.Ime} {Plezalec.Priimek}")</h5>
+                <h6 class="font-weight-bold">@($"Vzdevek: {Plezalec.UserName}")</h6>
+                <h6 class="font-weight-bold">@($"Starost: {DateTime.UtcNow.Year - Plezalec.DatumRojstva.Year}")</h6>
+            </div>
+        </div>
+    </div>
+    

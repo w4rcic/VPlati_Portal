@@ -1,0 +1,13 @@
+﻿<AuthorizeView>
+    <Authorized>
+        <a href="/editplezalec">Pozdravljen, @context.User.Identity.Name!</a>
+        &nbsp;&nbsp;
+        <form method="post" action="Identity/Account/Logout">
+            <button type="submit" class="nav-link btn btn-light text-center">Odjava</button>
+        </form>
+    </Authorized>
+    <NotAuthorized>
+        <a href="Identity/Account/Register">Registracija</a>
+        <a href="Identity/Account/Login">Prijava</a>
+    </NotAuthorized>
+</AuthorizeView>

@@ -1,0 +1,55 @@
+﻿@inherits UrediSmerBase
+
+    <ModalComponent ModalSize="modal-lg" ButtonStyle="btn-outline-info btn-sm" ButtonText="Uredi Smer" ModalHeader="Popravi podatke o novi smeri: " OnPotrdi="Update" @ref="ModalComponentChange">
+        <ModalBody>
+            <EditForm Model="Smer" OnValidSubmit="() => ConfirmationChange(true)">
+                <DataAnnotationsValidator />
+                <div class="form-group row">
+                    <label for="imeSmeri" class="col-sm-4 col-form-label">
+                        Ime nove smeri:
+                    </label>
+                    <div class="col-sm-8">
+                        <InputText id="imeSmeri" class="form-control" placeholder="Ime smeri" @bind-Value="@Smer.ImeSmeri" />
+                        <ValidationMessage For="@(()=>Smer.ImeSmeri)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="dolzinaSmeri" class="col-sm-4 col-form-label">
+                        Dolžina smeri:
+                    </label>
+                    <div class="col-sm-8">
+                        <InputNumber id="dolzinaSmeri" class="form-control" placeholder="Vnesi dolžino smeri v metrih" @bind-Value="@Smer.Dolzina" />
+                        <ValidationMessage For="@(()=>Smer.Dolzina)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="opremljevalec" class="col-sm-4 col-form-label">
+                        Opremljevalec:
+                    </label>
+                    <div class="col-sm-8">
+                        <InputText id="opremljevalec" class="form-control" placeholder="Opremljevalec" @bind-Value="@Smer.Opremjevalec" />
+                        <ValidationMessage For="@(()=>Smer.Opremjevalec)" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="datumPrvegaVzpona" class="col-sm-4 col-form-label">
+                        Datum Prvega Vzpona:
+                    </label>
+                    <div class="col-sm-8">
+                        <InputDate class="form-control" @bind-Value="@Smer.PrviVzpon" />
+                        <ValidationMessage For="@(()=>Smer.PrviVzpon)" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => ConfirmationChange(false)">
+                        Prekliči
+                    </button>
+
+                    <button class="btn btn-primary" type="submit">
+                        Shrani
+                    </button>
+                </div>
+            </EditForm>
+        </ModalBody>
+    </ModalComponent>

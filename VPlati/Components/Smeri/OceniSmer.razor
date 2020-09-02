@@ -1,0 +1,45 @@
+﻿@inherits OceniSmerBase
+
+<ModalComponent ModalSize="modal-lg" ButtonStyle="btn-outline-info btn-sm" ButtonText="Oceni Smer" ModalHeader="Oceni Smer: " OnPotrdi="Add" OnOdpriObrazec="PridobiVse" @ref="ModalComponentChange">
+    <ModalBody>
+        <EditForm Model="NovaOcenaSmeri" OnValidSubmit="() => ConfirmationChange(true)">
+            <DataAnnotationsValidator />
+            <div class="form-group row">
+                <label for="ocenaSmeri" class="col-sm-4 col-form-label">
+                    Ocena smeri:
+                </label>
+                <div class="col-sm-8">
+                    <InputSelect id="ocenaSmeri" class="form-control" @bind-Value="@OcenaSmeri">
+                        @foreach (var ocena in VseOceneSmeri)
+                        {
+                            <option value="@ocena.OcenaSmeri">@ocena.OcenaSmeri</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => NovaOcenaSmeri )" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="nacinPreplezanja" class="col-sm-4 col-form-label">
+                    Ocena smeri:
+                </label>
+                <div class="col-sm-8">
+                    <InputSelect id="nacinPreplezanja" class="form-control" @bind-Value="@NacinPreplezanja">
+                        @foreach (var nacin in VsiNacini)
+                        {
+                            <option value="@nacin.Nacin">@nacin.Nacin</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => ConfirmationChange(false)">
+                    Prekliči
+                </button>
+
+                <button class="btn btn-primary" type="submit">
+                    Shrani
+                </button>
+            </div>
+        </EditForm>
+    </ModalBody>
+</ModalComponent>

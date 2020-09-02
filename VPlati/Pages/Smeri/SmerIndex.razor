@@ -1,0 +1,123 @@
+﻿@page "/smer/{id}"
+@inherits SmerIndexBase
+
+@if (Smer == null || Ocene == null)
+{
+    <img class="nalagam" src="images/Nalagam.gif" border="0" alt="animated-climbing-image-0012" />
+}
+else
+{
+<div class="container">
+    <h2 class="font-weight-bold">@Smer.ImeSmeri</h2>
+    <hr>
+    <AuthorizeView Roles="admin">
+        <div class="text-center">
+            <CascadingValue Value="Smer">
+                <UrediSmer OnVnesiNovoSmer="OnInitializedAsync" />
+            </CascadingValue>
+        </div>
+        <hr>
+    </AuthorizeView>
+    <h6 class="font-weight-bold">Osnovni podatki:</h6>
+    <div>
+        <table class="table table-bordered col-md-4">
+            <tbody>
+                <tr>
+                    <th scope="row">Težavnost</th>
+                    <td colspan="2" class="text-center">@Ocene.ElementAt(Smer.PovprecnaOcena).OcenaSmeri</td>
+                </tr>
+                <tr>
+                    <th scope="row">Dolžina Smeri</th>
+                    <td colspan="2" class="text-center">@Smer.Dolzina m</td>
+                </tr>
+                <tr>
+                    <th scope="row">Zabeleženih Vzponov</th>
+                    <td colspan="2" class="text-center">@PrestejVzpone()</td>
+                </tr>
+                <tr>
+                    <th scope="row">Opremljevalec</th>
+                    <td colspan="2" class="text-center">@Smer.Opremjevalec</td>
+                </tr>
+                <tr>
+                    <th scope="row">Leto postavitve</th>
+                    <td colspan="2" class="text-center">@Smer.PrviVzpon.Year</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <AuthorizeView>
+        @if (PlezalecSeNiOcenilSmer(context.User.Identity.Name))
+        {
+            <div class="text-center">
+                <OceniSmer Smer="Smer" OnVnesi="OnInitializedAsync" />
+            </div>
+        }
+    </AuthorizeView>
+    <div>
+        <div>
+            <h6 class="font-weight-bold">Ocene:</h6>
+        </div>
+        <table class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ocena</th>
+                    <th scope="col">Plezalec</th>
+                    <th scope="col">Način</th>
+                    <th scope="col">Datum Vnosa</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{var st = 1; }
+                @foreach (var ocena in Smer.OceneSmeri.OrderByDescending(o => o.OcenaSmeriDatum))
+                {
+                    <tr>
+                        <th scope="row">@st</th>
+                        <td>@ocena.Ocena.OcenaSmeri</td>
+                        <td>
+                            <a href=@($"/plezalec/{ocena.PlezalecId}") class="text-success">
+                                @ocena.Plezalec.UserName
+                            </a>
+                        </td>
+                        <td>@ocena.NacinPreplezanjaSmeri.Nacin</td>
+                        <td>@ocena.OcenaSmeriDatum.ToShortDateString()</td>
+                    </tr>
+                    st++;
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h6 class="font-weight-bold">Komentarji:</h6>
+
+        @if (!Smer.Komentarji.Any())
+        {
+            <div class="alert alert-secondary" role="alert">
+                @(Smer.ImeSmeri) nima komentarja
+            </div>
+
+        }
+        else
+        {
+            @foreach (var komentar in Smer.Komentarji.OrderByDescending(k => k.KomentarDatum))
+            {
+                <ul class="media-list">
+                    <PrikaziKomentar Komentar="komentar" OnIzbrisiKomentar_Klik="OnInitializedAsync" />
+                </ul>
+            }
+        }
+
+    </div>
+    <div class=" text-center">
+        <a href=@($"plezalisce/{Smer.Sektor.PlezalisceId}") class="btn btn-outline-secondary">Nazaj</a>
+        <AuthorizeView>
+            <Authorized>
+                <DodajNovKomentarSmeri Smer="Smer" OnVnesi="OnInitializedAsync" />
+            </Authorized>
+        </AuthorizeView>
+    </div>
+</div>
+}
+
+
+

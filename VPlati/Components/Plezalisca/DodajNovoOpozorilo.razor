@@ -1,0 +1,22 @@
+﻿@inherits DodajNovoOpozoriloBase
+
+<ModalComponent ButtonStyle="btn-outline-danger" ButtonText="Dodaj Novo Opozorilo" ModalHeader="Vpišite Novo Opozorilo:" OnPotrdi="NovoOpozoriloAdd" OnOdpriObrazec="OdpriObrazecNovoOpozorilo" @ref="ModalComponentChange">
+    <ModalBody>
+        <EditForm Model="NovoOpozorilo" OnValidSubmit="() => ConfirmationChange(true)">
+            <DataAnnotationsValidator />
+
+            <InputTextArea id="komentarSmeri" class="form-control" placeholder="Tukaj vpišite novo opozorilo" @bind-Value="@NovoOpozorilo.OpozoriloText" />
+            <ValidationMessage For="@(()=>NovoOpozorilo.OpozoriloText)" />
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => ConfirmationChange(false)">
+                    Prekliči
+                </button>
+
+                <button class="btn btn-primary" type="submit">
+                    Shrani
+                </button>
+            </div>
+        </EditForm>
+    </ModalBody>
+</ModalComponent>

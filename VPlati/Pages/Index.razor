@@ -1,0 +1,139 @@
+﻿@page "/"
+@inject IVPlatiRepository DataRepository
+
+<div class="container">
+    <h2 class="font-weight-bold">Dobrodošli v aplikaciji VPlati</h2>
+    <hr>
+    <p class="text-justify">
+
+        Stran je namenjena vsem plezalcem, ljubiteljem vertikale in na splošno vsem privržencem športov, ki se odvijajo v naravi.
+        V naši aplikaciji se nahajajo podatki o slovenskih plezališčih in registriranih uporabnikih, ki svoje podvige veselo vpisujejo v aplikacijo.
+        Cilj aplikacije je olajšati plezalecem pot v naravna plezališča, jih opozarjati o nevarnostih in pomagati z nasveti v težkih smereh.
+        Količina podatkov v aplikaciji je omejena, ampak se bo z večjim številom uporabnikov tudi baza podatkov pridno povečevala.
+    </p>
+    <hr>
+    <p class="text-justify">
+        Za dostop do naprednih storitev, kot so komentiranje in ocenjevanje smeri, ali pa izdajanje opozoril in pa označevanje preplezanih strani,
+        se je potrebno registrirati. V primeru, da ste postavljalec smeri ali pa da želite pomagati pri povečevanju baze podatkov o plezališčih nam
+        pišite na e-mail naslov info@vplati.si in z veseljem vam bomo nadgradili vaš uporabniški račun v administratorskega, s katerim boste lahko
+        dodajali v aplikacijo nova plezališča, nove sektorje in nove smeri.
+    </p>
+    <hr>
+    @if (OceneSmeri == null || VseOcene == null)
+    {
+        <img class="nalagam" src="images/Nalagam.gif" border="0" alt="animated-climbing-image-0012" />
+    }
+    else
+    {
+        <h6><strong>Zadnjih 5 ocenjenih smeri</strong></h6>
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Plezališče</th>
+                    <th scope="col">Smer</th>
+                    <th scope="col">Plezalec</th>
+                    <th scope="col">Ocena</th>
+                    <th scope="col">Način</th>
+                    <th scope="col">Dolžina</th>
+                    <th scope="col">Datum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;}
+                @foreach (var ocenaSmeri in OceneSmeri)
+                {
+                    if (i > 5)
+                    {
+                        break;
+                    }
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>
+                            <a href=@($"/plezalisce/{ocenaSmeri.Smer.Sektor.Plezalisce.Id}")>@ocenaSmeri.Smer.Sektor.Plezalisce.ImePlezalisca</a>
+                        </td>
+                        <td>
+                            <a href=@($"/smer/{@ocenaSmeri.Smer.Id}")>@ocenaSmeri.Smer.ImeSmeri</a>
+                        </td>
+                        <td>
+                            <a href=@($"/plezalec/{@ocenaSmeri.PlezalecId}") class="text-success">@ocenaSmeri.Plezalec.UserName</a>
+                        </td>
+                        <td>
+                            @ocenaSmeri.Ocena.OcenaSmeri
+                        </td>
+                        <td>
+                            @ocenaSmeri.NacinPreplezanjaSmeri.Nacin
+                        </td>
+                        <td>
+                            @ocenaSmeri.Smer.Dolzina m
+                        </td>
+                        <td>
+                            @ocenaSmeri.OcenaSmeriDatum.ToShortDateString()
+                        </td>
+                    </tr>
+                    i++;
+                }
+
+
+            </tbody>
+        </table>
+    }
+    <hr>
+    <h6><strong>Zadnjih 5 izdanih opozoril</strong></h6>
+    @if (VsaOpozorila == null)
+    {
+        <p>Trenutno ni nobenega izdanega opozorila!</p>
+    }
+    else
+    {
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Plezalisce</th>
+                    <th scope="col">Opozorilo</th>
+                    <th scope="col">Datum</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;}
+                @foreach (var opozorilo in VsaOpozorila)
+                {
+                    if (i > 5)
+                    {
+                        break;
+                    }
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>
+                            <a href=@($"/plezalisce/{opozorilo.PlezalisceId}")>@opozorilo.Plezalisce.ImePlezalisca</a>
+                        </td>
+                        <td>
+                            <small>@opozorilo.OpozoriloText</small>
+                        </td>
+                        <td>
+                            @opozorilo.OpozoriloDatum.ToShortDateString()
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    }
+
+</div>
+
+@code
+{
+    public IEnumerable<OcenaSmeri> OceneSmeri { get; set; }
+    public IEnumerable<Ocena> VseOcene { get; set; }
+    public IEnumerable<Opozorilo> VsaOpozorila { get; set; }
+    protected async override Task OnInitializedAsync()
+    {
+        OceneSmeri = await DataRepository.GetOceneSmeri();
+        VseOcene = await DataRepository.GetOcene();
+        OceneSmeri = OceneSmeri.OrderByDescending(d => d.OcenaSmeriDatum);
+        VsaOpozorila = await DataRepository.GetOpozorila();
+        VsaOpozorila = VsaOpozorila.OrderByDescending(d => d.OpozoriloDatum);
+    }
+}

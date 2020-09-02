@@ -1,0 +1,22 @@
+﻿@inherits DodajNovKomentarSmeriBase
+
+    <ModalComponent ButtonStyle="btn-outline-primary" ButtonText="Komentar" ModalHeader="Vpišite Nov Komentar:" OnPotrdi="Add" OnOdpriObrazec="OdpriObrazec" @ref="ModalComponentChange">
+        <ModalBody>
+            <EditForm Model="NovKomentar" OnValidSubmit="() => ConfirmationChange(true)">
+                <DataAnnotationsValidator />
+
+                <InputTextArea id="komentarSmeri" class="form-control" placeholder="Tukaj vpišite novo opozorilo" @bind-Value="@NovKomentar.KomentarText" />
+                <ValidationMessage For="@(()=>NovKomentar.KomentarText)" />
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" @onclick="() => ConfirmationChange(false)">
+                        Prekliči
+                    </button>
+
+                    <button class="btn btn-primary" type="submit">
+                        Shrani
+                    </button>
+                </div>
+            </EditForm>
+        </ModalBody>
+    </ModalComponent>

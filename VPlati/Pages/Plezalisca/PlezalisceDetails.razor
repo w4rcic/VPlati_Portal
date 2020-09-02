@@ -1,0 +1,143 @@
+﻿@page "/plezalisce/{id}"
+@inherits PlezalisceDetailsBase
+
+
+@if (Plezalisce == null || Plezalisce.Sektorji == null || Ocene == null)
+{
+    <img class="nalagam" src="images/Nalagam.gif" border="0" alt="animated-climbing-image-0012" />
+}
+else
+{
+<div class="container">
+    <h2 class="font-weight-bold">@Plezalisce.ImePlezalisca</h2>
+    <hr>
+
+    <AuthorizeView Roles="admin">
+        <Authorized>
+            <div class="text-center">
+                <a href="@($"editplezalisce/{Plezalisce.Id}")" class="btn btn-outline-primary">Uredi Plezališče</a>
+                <button type="button" class="btn btn-outline-danger" @onclick="IzbrisiKlik">Izbriši Plezališče</button>
+                <PotrdiComponent @ref="PotrdiDelete" OnPotrdiSprememba="IzbrisiPlezalisce_Klik" PotrdiOknoText=@($"Ali res želite izbrisati plezališče: {Plezalisce.ImePlezalisca}?") />
+            </div>
+            <hr>
+        </Authorized>
+    </AuthorizeView>
+
+    <img src=@Plezalisce.SlikaPlezalisca class="img-fluid" style="width:100%" alt="Responsive image">
+    <hr>
+    <div>
+        <h6 class="font-weight-bold">Opozorila:</h6>
+        @if (Plezalisce.Opozorila.Count() == 0)
+        {
+            <div class="alert alert-info" role="alert">
+                Ni aktivnih opozoril.
+            </div>
+        }
+        else
+        {
+            foreach (var opozorilo in Plezalisce.Opozorila.OrderByDescending(o=>o.OpozoriloDatum))
+            {
+                <PrikaziOpozorilo Opozorilo="opozorilo" OnIzbrisi_Klik="OnInitializedAsync" />
+            }
+        }
+        <AuthorizeView>
+            <Authorized>
+                <div class="text-center">
+                    <DodajNovoOpozorilo Plezalisce="Plezalisce" OnVnesiNovoOpozorilo="OnInitializedAsync" />
+                </div>
+            </Authorized>
+        </AuthorizeView>
+    </div>
+    <hr>
+    <div>
+        <h6 class="font-weight-bold">Opis dostopa</h6>
+        @if (Plezalisce.OpisDostopa == null)
+        {
+            <div class="alert alert-info" role="alert">
+                Plezališče nima podanega opisa plezališča.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info" role="alert">
+                @Plezalisce.OpisDostopa
+            </div>
+        }
+    </div>
+    <hr>
+    <div>
+        <h6 class="font-weight-bold">Težavnost smeri</h6>
+        <table class="table text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">4a ... 4c</th>
+                    <th scope="col">5a ... 5c</th>
+                    <th scope="col">6a ... 6c+</th>
+                    <th scope="col">7a ... 7c+</th>
+                    <th scope="col">8a ... 8c+</th>
+                    <th scope="col">9a ... 9c</th>
+                </tr>
+            </thead>
+            <tbody class="alert-info">
+                <tr>
+                    @foreach (var tezavnost in Plezalisce.PovOcene)
+                    {
+                        <td>@tezavnost</td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div>
+        <h6 class="font-weight-bold">Sektorji plezališča</h6>
+
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <div class="text-center">
+                    <DodajNovSektorDetails Plezalisce="Plezalisce" OnVnesiNovSektor="OnInitializedAsync" />
+                </div>
+            </Authorized>
+        </AuthorizeView>
+        
+        @foreach (var sektor in Plezalisce.Sektorji)
+        {
+            <hr>
+            <table class="table table-hover text-center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">@sektor.ImeSektorja</th>
+                        <th scope="col">Ime smeri</th>
+                        <th scope="col">Težavnost</th>
+                        <th scope="col">Dolžina</th>
+                        <AuthorizeView Roles="admin">
+                            <Authorized>
+                                <th scope="col">Akcija</th>
+                            </Authorized>
+                        </AuthorizeView>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{var st = 1;}
+                    @foreach (var smer in sektor.Smeri)
+                    {
+                        
+                    <CascadingValue Value="@smer">
+                        <PrikaziSmer PrijavljenPlezalec="PrijavljenPlezalec" Ocene="Ocene" Counter="@st" OnSprememba_Smer_Klik="OnInitializedAsync" />
+                        @{st++;}
+                    </CascadingValue>
+                    }
+                </tbody>
+            </table>
+
+            <AuthorizeView Roles="admin">
+                <Authorized>
+                    <div class="text-center">
+                        <DodajNovoSmer Sektor="sektor" OnVnesiNovoSmer="OnInitializedAsync" />
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        }
+    </div>
+</div>
+}

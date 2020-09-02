@@ -1,0 +1,25 @@
+﻿@page "/plezalci"
+@inherits PlezalciIndexBase
+
+    <div class="container">
+        <h2 class="font-weight-bold">Plezalci</h2>
+        <hr>
+        <Iskanje OnSearch_Klik="Search_Klik" LabelText="Poišči plezalca"/>
+        @if (Plezalci == null)
+        {
+            <img class="nalagam" src="images/Nalagam.gif" border="0" alt="animated-climbing-image-0012" /> 
+            }
+        else
+        {
+            <div class="col-md-12">
+                <div class="card-deck">
+                    @foreach (var plezalec in Plezalci)
+                    {
+                        <PlezalecCard Plezalec="plezalec" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+

@@ -1,0 +1,54 @@
+﻿@inherits PlezalisceCardBase
+
+
+<div class="m-3" style="width: 20rem;">
+    <div class="card @CSSShadow">
+        <div class="card-header">
+            <h3 class="font-weight-bold" style="margin:0;">@Plezalisce.ImePlezalisca</h3>
+        </div>
+        <div class="text-center">
+            <a href="/plezalisce/@Plezalisce.Id"><img class="card-img-top imgThumbnail img-fluid" @onmouseover="HoverEffect" @onmouseout="NormalEffect" src="@Plezalisce.SlikaPlezalisca" alt="Slika plezalisca" /></a>
+        </div>
+        <div class="card-body text-center">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <table class="table-borderless" style="font-size:9px;">
+                        <tr>
+                            <td><img class="imgIcon img-thumbnail" src="images/foot.png" alt="Čas dostopa" /></td>
+                            <td><img class="imgIcon img-thumbnail" src="images/kompas.png" alt="Usmerjenost sten" /></td>
+                            <td><img class="imgIcon img-thumbnail" src="images/visina.png" alt="Nadmorska višina plezališča" /></td>
+                            <td><img class="imgIcon img-thumbnail" src="images/popularnost.png" alt="Popularnost" /></td>
+                        </tr>
+                        <tr>
+                            <td>Dostop</td>
+                            <td>Lega</td>
+                            <td>NM višina</td>
+                            <td>Popularnost</td>
+                        </tr>
+                        <tr>
+                            <td>@(Plezalisce.CasDostopa) min</td>
+                            <td>@(Plezalisce.UsmerjenostStene)</td>
+                            <td>@(Plezalisce.Visina) m</td>
+                            <td>@($"{Plezalisce.IzracunajPriljubljenost()} / 5")</td>
+                        </tr>
+                    </table>
+                    <hr>
+                    <div class="text-center" style="font-size:12px;">
+                        <strong>Število smeri: @Plezalisce.VrniStSmeri()</strong>
+</div>
+                </div>
+            </div>
+        </div>
+
+        <AuthorizeView Roles="admin">
+            <Authorized>
+                <div class="card-footer">
+                    <a href=@($"editplezalisce/{Plezalisce.Id}") class="btn btn-outline-primary">Uredi</a>
+                    <button type="button" class="btn btn-outline-danger" @onclick="IzbrisiKlik">Izbriši</button>
+                </div>
+                <PotrdiComponent @ref="PotrdiDelete" OnPotrdiSprememba="IzbrisiPlezalisce_Klik" PotrdiOknoText=@($"Ali res želite izbrisati plezališče: {Plezalisce.ImePlezalisca}?") />
+            </Authorized>
+        </AuthorizeView>
+    </div>
+</div>
+

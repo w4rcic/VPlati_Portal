@@ -1,0 +1,118 @@
+﻿@page "/editplezalisce/{id}"
+@inherits PlezalisceEditBase
+@attribute [Authorize(Roles = "admin")]
+
+<div class="container">
+    <EditForm Model="@Plezalisce" OnValidSubmit="UpdatePlezalisce">
+        <DataAnnotationsValidator />
+        <h2 class="font-weight-bold">Uredi podatke o plezališču:</h2>
+        <hr />
+        <div class="form-group row">
+            <label for="imePlezalisca" class="col-sm-2 col-form-label">
+                Ime plezališča:
+            </label>
+            <div class="col-sm-6">
+                <InputText id="imePlezalisca" class="form-control" placeholder="Ime plezališča"
+                           @bind-Value="@Plezalisce.ImePlezalisca"></InputText>
+                <ValidationMessage For="@(()=>Plezalisce.ImePlezalisca)" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="casDostopa" class="col-sm-2 col-form-label">
+                Čas Dostopa:
+            </label>
+            <div class="col-sm-6">
+                <InputNumber id="casDostopa" class="form-control" placeholder="Čas Dostopa (minute)"
+                             @bind-Value="@Plezalisce.CasDostopa"></InputNumber>
+                <ValidationMessage For="@(()=>Plezalisce.CasDostopa)" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="visinaPlezalisca" class="col-sm-2 col-form-label">
+                Višina plezališča:
+            </label>
+            <div class="col-sm-6">
+                <InputNumber id="visinaPlezalisca" class="form-control" placeholder="Nadmorska višina plezališča (metri)"
+                             @bind-Value="@Plezalisce.Visina"></InputNumber>
+                <ValidationMessage For="@(()=>Plezalisce.Visina)" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="usmerjenostStene" class="col-sm-2 col-form-label">
+                Usmerjenost stene:
+            </label>
+            <div class="col-sm-6">
+                <InputSelect id="usmerjenostStene" class="form-control" @bind-Value="@Plezalisce.UsmerjenostStene">
+                    @foreach (var smer in Enum.GetValues(typeof(UsmerjenostStene)))
+                    {
+                        <option value="@smer">@smer</option>
+                    }
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="opisDostopa" class="col-sm-2 col-form-label">
+                Opis dostopa:
+            </label>
+            <div class="col-sm-6">
+                <InputTextArea id="opisDostopa" class="form-control" placeholder="Tukaj vpišite opis dostopa" @bind-Value="@Plezalisce.OpisDostopa" />
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="imeSektorja" class="col-sm-2 col-form-label">
+                Dodaj nov sektor:
+            </label>
+            <div class="col-sm-5">
+                <input id="imeSektorja" @bind-value="@ImeSektorja" class="form-control" placeholder="Tukaj vpiši ime novega sektorja">
+
+            </div>
+            <div class="col-sm-auto">
+                <button class="btn btn-outline-dark" type="button" @onclick="DodajSektor_Klik">Dodaj</button>
+            </div>
+        </div>
+
+        @if (Plezalisce.Sektorji != null)
+        {
+            @foreach (var sektor in Plezalisce.Sektorji)
+            {
+                <AddSektorEditPlezalisce Sektor="sektor" OnIzbrisiSektor_Klik="IzbrisiSektor_Klik" />
+            }
+        }
+
+        <div class="form-group row">
+            <label for="slikaPlezalisca" class="col-sm-2 col-form-label">
+                Slika plezališča:
+            </label>
+            <div class="col-sm-6">
+                <input type="file" @ref="InputReference" @onchange="IzberiSliko">
+                <div class="alert alert-danger @Notification" role="alert">
+                    Napačen format slike!
+                </div>
+                @if (NovaSlika)
+                {
+                    <img class="img-thumbnail m-1" src="@ImageContent" />
+                }
+                else
+                {
+                    <img class="img-thumbnail m-1" src=@Plezalisce.SlikaPlezalisca />
+                }
+            </div>
+        </div>
+        <ValidationSummary />
+        <div class="col-sm-8 text-center">
+            <button class="btn btn-outline-primary" type="submit">
+                Shrani
+            </button>
+            <a href=@($"plezalisce/{Plezalisce.Id}") class="btn btn-outline-secondary">Nazaj</a>
+            <button class="btn btn-outline-danger" type="button" @onclick="Izbrisi_Klik">
+                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+            </button>
+        </div>
+        <PotrdiComponent @ref="PotrdiDelete" OnPotrdiSprememba="IzbrisiPlezalisce_Klik" PotrdiOknoText=@($"Ali res želite izbrisati plezališče: {Plezalisce.ImePlezalisca}?") />
+    </EditForm>
+</div>
